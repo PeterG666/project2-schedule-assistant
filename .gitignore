@@ -1,0 +1,15 @@
+# PyCharm 配置文件
+.idea/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 虚拟环境
+venv/
+
+# 数据库文件（本地数据，不上传）
+todo.db
+
+# 环境变量（防 API key 泄露）
+.env
