@@ -1,0 +1,8 @@
+# Direct dependency versions observed in this project's existing local venv.
+# Linux image build and end-to-end validation are still required.
+fastapi==0.141.1
+uvicorn==0.52.3
+openai==2.53.0
+langgraph==1.2.11
+langchain-openai==1.4.2
+langchain-core==1.5.5

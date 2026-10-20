@@ -5,13 +5,14 @@
 前提：FastAPI 后端必须已经在运行（uvicorn main:app --port 8013）
 """
 
+import os
 import streamlit as st
 import requests
 
 st.set_page_config(page_title="AI日程助手", page_icon=":calendar:")
 st.title("AI 智能日程管理助手")
 
-API_URL = "http://127.0.0.1:8013"
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8013")
 
 st.caption("用自然语言告诉我你的需求，例如：明天下午3点提醒我开会")
 

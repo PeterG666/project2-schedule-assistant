@@ -28,7 +28,7 @@ from langchain_core.messages import ToolMessage, HumanMessage, SystemMessage
 
 API_KEY = os.getenv("DEEPSEEK_API_KEY")
 API_BASE = "https://api.deepseek.com"
-DB_PATH = "todo.db"
+DB_PATH = os.getenv("DB_PATH", "todo.db")
 
 app = FastAPI(title="AI日程管理助手")
 

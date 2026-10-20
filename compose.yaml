@@ -1,0 +1,35 @@
+name: personal-schedule
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:?请在当前项目的 .env 中填写 DEEPSEEK_API_KEY}"
+      DB_PATH: /data/todo.db
+    ports:
+      - "127.0.0.1:18013:8013"
+    volumes:
+      - task-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8013/', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      API_URL: http://backend:8013
+    ports:
+      - "127.0.0.1:18513:8501"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  task-data:
