@@ -6,3 +6,4 @@ openai==2.53.0
 langgraph==1.2.11
 langchain-openai==1.4.2
 langchain-core==1.5.5
+mcp==2.3.0

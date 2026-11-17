@@ -50,6 +50,32 @@ LangGraph 管理的是单次请求内的工具调用循环。每个 `/chat` 请�
 | 数据存储 | SQLite，使用 Python 标准库 `sqlite3` |
 | 部署 | Python 3.12 基础镜像、Docker、Docker Compose |
 
+### MCP工具接入
+
+#### MCP 工具
+
+项目提供四个 MCP 工具：`create_task` 创建任务、`list_tasks` 查询任务、
+`complete_task` 标记完成、`delete_task` 删除任务。
+
+测试客户端会启动一个 MCP Server 子进程，通过 stdio 发送请求和接收回复。
+Server 收到请求后，调用 `task_service.py` 中对应的函数读写 SQLite。
+MCP 和原来的 FastAPI 接口共用这套任务操作逻辑。
+
+**FastAPI 的 `/chat` 仍通过 `TOOL_MAP` 调用业务函数，独立 MCP 客户端则通过 stdio 调用 Server**
+
+#### 本地验证
+
+安装后端依赖后，在项目根目录用 Git Bash 运行：
+
+```bash
+./venv/Scripts/python.exe -B mcp_client_test.py
+```
+
+脚本会列出工具、创建一条测试任务并查询任务列表，最后直接读取 SQLite
+核对写入结果。测试使用独立的临时数据库，结束后自动清理。
+
+脚本会故意漏传 `title`，出现 `Field required` 并打印 `True` 表示参数校验通过。
+
 ## 快速启动
 
 需要 Docker Engine 与 Compose 插件；Windows 可使用 Docker Desktop，启动前请确保 Docker 引擎已运行。构建需要下载基础镜像和 Python 依赖，实际对话需要可用的 DeepSeek API Key、网络及 API 额度。
@@ -165,7 +191,7 @@ Compose 使用 `task-data` 命名卷挂载到后端的 `/data`。默认项目名
 
 4. 等待后端 `healthy`，刷新 Web 页面并再次查询；预期仍能看到同一条任务。
 
-此验收不等于完整自动化测试覆盖。页面上的临时回复可能在刷新后消失，数据库里的任务记录应保留。
+此验收不能覆盖完整的自动化测试。页面上的临时回复可能在刷新后消失，数据库里的任务记录应保留。
 
 ## 常用运维命令
 
@@ -207,4 +233,4 @@ docker compose down
 - **对话与参数校验**：未保存跨请求上下文；工具执行层尚需完善参数校验、异常处理与超时策略。
 - **测试与观测**：当前以本地手工验收为主，后续可补充工具单元测试、接口集成测试及模型调用耗时统计。
 
-本项目的核心是验证并展示“自然语言意图 → 工具选择 → 数据操作 → 结果反馈”的工程实现，不以尚未实现的生产级能力作为项目卖点。
+本项目的核心是验证并展示“自然语言意图 → 工具选择 → 数据操作 → 结果反馈”的工程实现，暂不能实现真正的生产级能力。
